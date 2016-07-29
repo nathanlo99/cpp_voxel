@@ -1,4 +1,4 @@
 main
 .DS_Store
-bin/*
+bin
 include/*.gch
