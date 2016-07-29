@@ -1,12 +1,20 @@
-SRCS = main.cpp
+SRCS = src/main.cpp
+OBJS = $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
 EXEC = main
+CPP = llvm-g++
+CPPFLAGS = -std=c++14 -Wall -Wextra -DDEBUG -framework OpenGL
 
-all: main
-	./main
+all: $(EXEC)
+	./$(EXEC)
 
-clean: 
-	rm main
+clean:
+	$(RM) $(EXEC)
+	$(RM) $(OBJS)
 
-main: $(SRCS)
-	llvm-g++ $(SRCS) -o main
+$(EXEC): $(OBJS)
+	$(CPP) $(CPPFLAGS) $(OBJS) -o $(EXEC)
 
+bin/%.o: src/%.cpp
+	$(CPP) $(CPPFLAGS) -c -o $@ $^
+
+.PHONY: $(EXEC)
