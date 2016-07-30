@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 
 #include "screen.h"
-#include <iostream>
 
 Screen::Screen(int width, int height, std::string title) {
   m_width = width;
@@ -12,6 +11,7 @@ Screen::Screen(int width, int height, std::string title) {
                               SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
   m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_SOFTWARE);
   m_surface = SDL_GetWindowSurface(m_window);
+  m_pixels = (int *)m_surface->pixels;
 }
 
 void Screen::update() {
