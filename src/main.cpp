@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include <OpenGL/GL.h>
+#include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
 
 #include "common.h"
@@ -18,9 +18,17 @@ bool init() {
     return false;
   }
 
-  debug("Setting OpenGL Version to 2.1");
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  const int OPENGL_MAJOR_VERSION = 3;
+  const int OPENGL_MINOR_VERSION = 3;
+
+  debug("Setting OpenGL Version to %d.%d", OPENGL_MAJOR_VERSION,
+        OPENGL_MINOR_VERSION);
+  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, OPENGL_MAJOR_VERSION);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, OPENGL_MINOR_VERSION);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
   debug("Creating SDL Window");
   gWindow = SDL_CreateWindow(
@@ -71,7 +79,9 @@ int main() {
         debug("Quit Requested");
         quit(0);
       case SDL_MOUSEMOTION:
-        // info("Mouse moved to: (%d, %d)", e.motion.x, e.motion.y);
+        char s[64];
+        sprintf(s, "%s (%d, %d)", TITLE, e.motion.x, e.motion.y);
+        SDL_SetWindowTitle(gWindow, s);
         break;
       default:
         // info("Unhandled event 0x%X", e.type);
