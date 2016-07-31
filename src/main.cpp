@@ -1,6 +1,7 @@
 #include <cstdio>
 
-#include <OpenGL/gl3.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
 #include <SDL2/SDL.h>
 
 #include "common.h"
@@ -8,9 +9,9 @@
 #define SCREEN_WIDTH 1100
 #define SCREEN_HEIGHT 750
 #define SCREEN_TITLE "C++ Voxel Engine"
-#define TARGET_FPS 60
+#define TARGET_FPS 120
 
-SDL_Window *gWindow = nullptr;
+SDL_Window* gWindow = nullptr;
 SDL_GLContext gContext = nullptr;
 SDL_Event gEvent;
 
@@ -65,8 +66,12 @@ bool init() {
     return false;
   }
 
+  debug("Setting up OpenGL Matrices");
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-  glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(70.f, SCREEN_WIDTH / SCREEN_HEIGHT, 0.0001f, 1000.f);
+  glMatrixMode(GL_MODELVIEW);
 
   return true;
 }
@@ -74,23 +79,19 @@ bool init() {
 void update() {
   while (SDL_PollEvent(&gEvent)) {
     switch (gEvent.type) {
-    case SDL_QUIT:
-      debug("Quit Requested");
-      quit(0);
-    case SDL_MOUSEMOTION:
-      //   static char s[64];
-      //   sprintf(s, "%s (%d, %d)", SCREEN_TITLE, gEvent.motion.x,
-      //   gEvent.motion.y);
-      //   SDL_SetWindowTitle(gWindow, s);
-      break;
-    default:
-      // debug("Unhandled event 0x%X", e.type);
-      break;
+      case SDL_QUIT:
+        debug("Quit Requested");
+        quit(0);
+      default:
+        break;
     }
   }
 }
 
-void render() {}
+void render() {
+  glClearColor(0, 0, 0.75f, 1);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
 void quit(int code) {
   debug("Quitting with exit code %d", code);
@@ -112,9 +113,9 @@ int main() {
   int frameCounter = 0;
   const double frameTime = 1.0 / TARGET_FPS;
   long lastTime = getTimeMs();
+  bool doRender = false;
   double unprocessedTime = 0.0;
   while (true) {
-    bool doRender = false;
     long startTime = getTimeMs();
     long passedTime = startTime - lastTime;
     lastTime = startTime;
@@ -126,9 +127,8 @@ int main() {
       update();
       if (frameCounter >= 1000.0) {
         static char s[64];
-        sprintf(s, "%s (%d FPS)", SCREEN_TITLE, frames);
+        sprintf(s, SCREEN_TITLE " (%d FPS)", frames);
         SDL_SetWindowTitle(gWindow, s);
-        // debug("%d FPS", frames);
         frames = 0;
         frameCounter = 0;
       }
@@ -136,6 +136,7 @@ int main() {
 
     if (doRender) {
       render();
+      doRender = false;
       frames++;
     } else {
       sleep((frameTime - unprocessedTime) * 1000000000L);
