@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -6,22 +8,36 @@
 #include <iostream>
 #include <string>
 
-// ================================= VERBOSE =================================
+// ================================= LOGGING =================================
+
+void log(const char *desc, const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  printf("[%s] ", desc);
+  vfprintf(stdout, format, args);
+  printf("\n");
+  va_end(args);
+}
 
 void debug(const char *format, ...) {
 #ifdef DEBUG
   va_list args;
   va_start(args, format);
-  printf("[INFO] ");
-  vfprintf(stdout, format, args);
-  printf("\n");
+  log("INFO", format, args);
   va_end(args);
 #endif
 }
 
+void error(const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  log("ERROR", format, args);
+  va_end(args);
+}
+
 // ============================== ERROR LOGGING ==============================
-inline void logSDLError(const std::string &msg) {
-  printf("[ERROR] %s error: %s\n", msg.c_str(), SDL_GetError());
+inline void logSDLError(const char *msg) {
+  log("ERROR", "%s error: %s", msg, SDL_GetError());
 }
 
 #endif

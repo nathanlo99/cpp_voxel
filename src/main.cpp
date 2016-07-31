@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 
 #include "common.h"
-#include "screen.h"
 
 const unsigned int SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
 const char *TITLE = "C++ Voxel Engine";
