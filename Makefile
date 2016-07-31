@@ -1,4 +1,4 @@
-SRCS = src/main.cpp src/screen.cpp
+SRCS = src/main.cpp
 OBJS = $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
 EXEC = main
 CPP = llvm-g++

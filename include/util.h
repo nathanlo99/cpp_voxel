@@ -8,7 +8,7 @@
 
 // ================================= VERBOSE =================================
 
-void log(const char *format, ...) {
+void debug(const char *format, ...) {
 #ifdef DEBUG
   va_list args;
   va_start(args, format);
@@ -20,7 +20,7 @@ void log(const char *format, ...) {
 }
 
 // ============================== ERROR LOGGING ==============================
-inline void logSDLError(std::ostream &os, const std::string &msg) {
+inline void logSDLError(const std::string &msg) {
   printf("[ERROR] %s error: %s\n", msg.c_str(), SDL_GetError());
 }
 
