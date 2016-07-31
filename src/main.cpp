@@ -137,6 +137,8 @@ int main() {
     if (doRender) {
       render();
       frames++;
+    } else {
+      sleep((frameTime - unprocessedTime) * 1000000000L);
     }
   }
 

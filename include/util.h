@@ -52,4 +52,13 @@ long getTimeMs() {
 #endif
 }
 
+inline void sleep(long ns) {
+#ifdef OS_APPLE
+  const long SECOND = 1000000000L;
+  nanosleep((const struct timespec[]){{ns / SECOND, ns % SECOND}}, NULL);
+#else
+  error("Sleeping for non-Apple operating systems not yet implemented");
+#endif
+}
+
 #endif
