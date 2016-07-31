@@ -5,7 +5,7 @@
 
 #include "common.h"
 
-const unsigned int SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
+const unsigned int SCREEN_WIDTH = 1100, SCREEN_HEIGHT = 750;
 const char *TITLE = "C++ Voxel Engine";
 
 SDL_Window *gWindow = nullptr;
@@ -48,16 +48,37 @@ bool init() {
 }
 
 void quit(int code) {
-  debug("Quitting");
+  debug("Quitting with exit code %d", code);
+  if (gContext != nullptr)
+    SDL_GL_DeleteContext(gContext);
+  if (gWindow != nullptr)
+    SDL_DestroyWindow(gWindow);
   SDL_Quit();
   exit(code);
 }
 
 int main() {
-  // TODO: Error handling
-  debug("Hello, cpp_voxel!");
   if (!init())
     return 1;
+
+  SDL_Event e;
+
+  debug("Entering Main Loop");
+  while (true) {
+    while (SDL_PollEvent(&e)) {
+      switch (e.type) {
+      case SDL_QUIT:
+        debug("Quit Requested");
+        quit(0);
+      case SDL_MOUSEMOTION:
+        // info("Mouse moved to: (%d, %d)", e.motion.x, e.motion.y);
+        break;
+      default:
+        // info("Unhandled event 0x%X", e.type);
+        break;
+      }
+    }
+  }
 
   quit(0);
 }

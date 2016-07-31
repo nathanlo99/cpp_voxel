@@ -2,7 +2,7 @@ SRCS = src/main.cpp
 OBJS = $(subst src/,bin/,$(subst .cpp,.o,$(SRCS)))
 EXEC = main
 CPP = llvm-g++
-CPPFLAGS = -std=c++14 -Wall -Wextra -DDEBUG -I include/
+CPPFLAGS = -std=c++14 -Wall -Wextra -DDEBUG -I include/ -Ofast
 OPENGL = -framework OpenGL
 SDL = -framework SDL2
 
