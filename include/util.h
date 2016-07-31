@@ -8,6 +8,10 @@
 #include <iostream>
 #include <string>
 
+#ifdef OS_APPLE
+#include <sys/time.h>
+#endif
+
 // ================================= LOGGING =================================
 
 inline void log(const char *desc, const char *format, va_list args) {
@@ -34,6 +38,18 @@ inline void error(const char *format, ...) {
 
 inline void logSDLError(const char *msg) {
   error("%s error: %s", msg, SDL_GetError());
+}
+
+// ============================== GETTING TIME ===============================
+long getTimeMs() {
+#ifdef OS_APPLE
+  timeval tp;
+  gettimeofday(&tp, nullptr);
+  return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+#else
+  error("Time Fetching for non-Apple operating systems not yet implemented");
+  return 0;
+#endif
 }
 
 #endif
